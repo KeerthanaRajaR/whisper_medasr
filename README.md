@@ -14,6 +14,7 @@ Transcription using Whisper and MedASR
 Metric-based comparison between ASR outputs
 
 ## PROJECT STRUCTURE
+```bash
 WHISPERMEDASR/
 │
 ├── audio/
@@ -43,6 +44,7 @@ WHISPERMEDASR/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
 ## SETUP INSTRUCTIONS
 1. Clone the repository:
