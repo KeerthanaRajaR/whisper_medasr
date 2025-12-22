@@ -1,5 +1,6 @@
-Whisper vs MedASR ASR Evaluation Pipeline
-Overview
+## Whisper vs MedASR ASR Evaluation Pipeline
+
+## Overview
 
 This project implements an end-to-end Automatic Speech Recognition (ASR) evaluation pipeline to compare Whisper and MedASR on realistic medical (dental) conversations.
 The goal is to evaluate transcription quality using standard ASR metrics and clinical safety–oriented metrics.
@@ -12,7 +13,7 @@ Transcription using Whisper and MedASR
 
 Metric-based comparison between ASR outputs
 
-Project Structure
+## PROJECT STRUCTURE
 WHISPERMEDASR/
 │
 ├── audio/
@@ -43,67 +44,33 @@ WHISPERMEDASR/
 ├── .gitignore
 └── README.md
 
-Workflow
-
-Reference Conversation
-
-A dental doctor–patient conversation is stored in
-conversations/convo1_reference.txt
-
-Audio Generation
-
-Text is converted into audio using generate_audio.py
-
-Output stored in audio/convo1.wav
-
-ASR Transcription
-
-Whisper transcription → transcripts/whisper/convo1.txt
-
-MedASR transcription → transcripts/medasr/convo1.txt
-
-Evaluation & Comparison
-
-Both transcripts are compared against the reference
-
-Metrics are computed and printed to the console
-
-Evaluation Metrics Implemented
-Standard ASR Metrics
-
-Word Error Rate (WER)
-
-Character Error Rate (CER)
-
-Sentence Error Rate (SER)
-
-Clinical & Safety Metrics
-
-Medical Terminology Accuracy
-
-Medication Name Accuracy
-
-Numeric Accuracy (dosage, duration)
-
-Laterality Accuracy (left/right)
-
-Negation Accuracy (no / denies / not)
-
-These metrics help assess clinical risk beyond basic transcription accuracy.
-
-How to Run
-1. Install dependencies
-pip install -r requirements.txt
-
-2. Run full comparison
-python run_compare_all.py
-
-
-This will:
-
-Use existing audio and transcripts (if available)
-
-Run Whisper and MedASR transcription
-
-Compute and display all metrics
-
+## SETUP INSTRUCTIONS
+1. Clone the repository:
+   ```bash
+   git clone
+    cd WHISPERMEDASR
+    ```
+2. Create and activate a virtual environment:
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate  # On Windows use `venv\Scripts\activate
+    ```
+3. Install dependencies:
+    ```bash
+    pip install -r requirements.txt     
+    ```
+4. Download and set up Whisper and MedASR models as per their respective documentation.
+5. Prepare your audio files and reference transcripts in the `audio/` and `conversations/` directories.
+6. Run the evaluation pipeline:
+    ```bash
+    python run_compare_all.py
+    ```
+## USAGE
+- To generate audio from text conversations, use:
+    ```bash
+    python generate_audio.py
+    ```
+- To    transcribe audio using Whisper, use:
+    ```bash
+    python transcribe_whisper.py --input_dir audio/ --output_dir transcripts/whisper/
+    ```     
