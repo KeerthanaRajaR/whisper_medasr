@@ -7,7 +7,7 @@ from transcribe_whisper import transcribe as whisper_transcribe
 from transcribe_medasr import transcribe_medasr
 
 # -----------------------------
-# Core ASR & clinical metrics
+# Core ASR metrics
 # -----------------------------
 from metric.wer_cer_ser import run_custom as wer_cer_ser
 from metric.medical_terms import run_custom as medical_terms
@@ -19,7 +19,15 @@ from metric.laterality_negation import (
 )
 
 # -----------------------------
-# Semantic & clinical metrics
+# Document structure
+# -----------------------------
+from metric.document_structure import (
+    section_heading_accuracy_run_custom,
+    punctuation_accuracy_run_custom
+)
+
+# -----------------------------
+# Semantic & clinical
 # -----------------------------
 from metric.semantic_clinical import (
     clinical_coherence_score_run_custom,
@@ -48,6 +56,25 @@ from metric.evaluation_methodology import (
 )
 
 # -----------------------------
+# Tools & implementation
+# -----------------------------
+from metric.tools_and_implementation import (
+    asr_library_consistency_run_custom,
+    medical_nlp_coverage_run_custom,
+    string_alignment_score_run_custom,
+    error_distribution_run_custom,
+    cicd_readiness_run_custom
+)
+
+# -----------------------------
+# Weighted error rate
+# -----------------------------
+from metric.weighted_error_rate import (
+    weighted_error_rate_run_custom,
+    error_weight_distribution_run_custom
+)
+
+# -----------------------------
 # Regulatory metrics
 # -----------------------------
 from metric.regulatory_metrics import (
@@ -71,6 +98,7 @@ Path("transcripts/medasr").mkdir(parents=True, exist_ok=True)
 # -----------------------------
 for cid in CONVERSATIONS:
     print(f"\n🔍 Conversation {cid}")
+
     ref_path = f"conversations/convo{cid}_reference.txt"
     audio_path = f"audio/convo{cid}.wav"
 
@@ -79,7 +107,7 @@ for cid in CONVERSATIONS:
 
         hyp_path = f"transcripts/{model}/convo{cid}.txt"
 
-        # -------- Transcription --------
+        # ----- Transcription -----
         if FAST_MODE and Path(hyp_path).exists():
             print("⚡ FAST MODE: Using existing transcript")
         else:
@@ -89,7 +117,7 @@ for cid in CONVERSATIONS:
             else:
                 transcribe_medasr(audio_path, hyp_path)
 
-        # -------- Core ASR metrics --------
+        # ----- Core ASR -----
         wer_cer_ser(ref_path, hyp_path)
         medical_terms(ref_path, hyp_path)
         medication_accuracy(ref_path, hyp_path)
@@ -97,30 +125,45 @@ for cid in CONVERSATIONS:
         run_laterality_custom(ref_path, hyp_path)
         run_negation_custom(ref_path, hyp_path)
 
-        # -------- Semantic & clinical --------
+        # ----- Document structure -----
+        section_heading_accuracy_run_custom(ref_path, hyp_path)
+        punctuation_accuracy_run_custom(ref_path, hyp_path)
+
+        # ----- Semantic / clinical -----
         clinical_coherence_score_run_custom(ref_path, hyp_path)
         ner_f1_score_run_custom(ref_path, hyp_path)
 
-        # -------- System metrics --------
+        # ----- System -----
         partial_transcription_rate_run_custom(ref_path, hyp_path)
         confidence_score_proxy_run_custom(ref_path, hyp_path)
         fp_fn_tradeoff_run_custom(ref_path, hyp_path)
 
-        # -------- Evaluation methodology --------
+        # ----- Evaluation methodology -----
         reference_quality_score_run_custom(ref_path)
         inter_annotator_agreement_run_custom()
         stratified_evaluation_run_custom(hyp_path)
         statistical_significance_run_custom()
         drift_monitoring_score_run_custom()
 
-        # -------- Regulatory --------
+        # ----- Tools & implementation -----
+        asr_library_consistency_run_custom(ref_path, hyp_path)
+        medical_nlp_coverage_run_custom(hyp_path)
+        string_alignment_score_run_custom(ref_path, hyp_path)
+        error_distribution_run_custom(ref_path, hyp_path)
+        cicd_readiness_run_custom(ref_path, hyp_path)
+
+        # ----- Weighted error rate -----
+        weighted_error_rate_run_custom(ref_path, hyp_path)
+        error_weight_distribution_run_custom(ref_path)
+
+        # ----- Regulatory -----
         phi_exposure_risk_run_custom(hyp_path)
         transcription_standards_compliance_run_custom()
         documentation_clarity_run_custom(hyp_path)
 
         print("-" * 60)
 
-# -------- System-level latency (once) --------
+# ----- Latency (once) -----
 realtime_vs_batch()
 
 print("\n✅ WHISPER vs MEDASR COMPARISON COMPLETED")
