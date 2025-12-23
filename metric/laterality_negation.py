@@ -1,3 +1,5 @@
+# metric/laterality_negation.py
+
 def extract_laterality(text):
     sentences = text.lower().split(".")
     result = []
@@ -7,47 +9,8 @@ def extract_laterality(text):
             result.append("left")
         if "right" in s:
             result.append("right")
-
     return result
 
-
-# ---------------------------
-# Existing CID-based function
-# ---------------------------
-def run(cid):
-    ref = open(f"conversations/convo{cid}_reference.txt").read()
-    hyp = open(f"transcripts/convo{cid}_whisper.txt").read()
-
-    _run_laterality(ref, hyp)
-
-
-# ---------------------------
-# NEW: Path-based function
-# ---------------------------
-def run_custom(ref_path, transcript_path):
-    ref = open(ref_path).read()
-    hyp = open(transcript_path).read()
-
-    _run_laterality(ref, hyp)
-
-
-def _run_laterality(ref, hyp):
-    ref_lat = extract_laterality(ref)
-    hyp_lat = extract_laterality(hyp)
-
-    correct = sum(1 for r, h in zip(ref_lat, hyp_lat) if r == h)
-    total = len(ref_lat)
-
-    accuracy = correct / total if total else 1.0
-
-    print("Laterality Accuracy:", round(accuracy, 3))
-    print("  Reference:", ref_lat)
-    print("  Hypothesis:", hyp_lat)
-
-
-# ===========================
-# NEGATION
-# ===========================
 
 def extract_negated_terms(text):
     neg_terms = ["infection", "swelling", "fever", "pain"]
@@ -61,27 +24,33 @@ def extract_negated_terms(text):
             for t in neg_terms:
                 if t in s:
                     result.add(t)
-
     return result
 
 
-# Existing CID-based
-def run_negation(cid):
-    ref = open(f"conversations/convo{cid}_reference.txt").read()
-    hyp = open(f"transcripts/convo{cid}_whisper.txt").read()
+# -----------------------------
+# CUSTOM RUNNERS (IMPORTANT)
+# -----------------------------
+def run_laterality_custom(ref_path, hyp_path):
+    ref = open(ref_path, encoding="utf-8").read()
+    hyp = open(hyp_path, encoding="utf-8").read()
 
-    _run_negation(ref, hyp)
+    ref_lat = extract_laterality(ref)
+    hyp_lat = extract_laterality(hyp)
+
+    correct = sum(1 for r, h in zip(ref_lat, hyp_lat) if r == h)
+    total = len(ref_lat)
+
+    accuracy = correct / total if total else 1.0
+
+    print("Laterality Accuracy:", round(accuracy, 3))
+    print("  Reference:", ref_lat)
+    print("  Hypothesis:", hyp_lat)
 
 
-# NEW: Path-based
-def run_negation_custom(ref_path, transcript_path):
-    ref = open(ref_path).read()
-    hyp = open(transcript_path).read()
+def run_negation_custom(ref_path, hyp_path):
+    ref = open(ref_path, encoding="utf-8").read()
+    hyp = open(hyp_path, encoding="utf-8").read()
 
-    _run_negation(ref, hyp)
-
-
-def _run_negation(ref, hyp):
     ref_neg = extract_negated_terms(ref)
     hyp_neg = extract_negated_terms(hyp)
 
