@@ -11,6 +11,8 @@ from metric.wer_cer_ser import run_custom as wer_cer_ser
 from metric.medical_terms import run_custom as medical_terms
 from metric.medication_accuracy import run_custom as medication_accuracy
 from metric.numeric_accuracy import run_custom as numeric_accuracy
+from metric.transcript_diff import side_by_side_diff
+from metric.clinical_risk import clinical_risk_score
 from metric.laterality_negation import (
     run_laterality_custom,
     run_negation_custom
@@ -153,7 +155,25 @@ for cid in CONVERSATIONS:
         transcription_standards_compliance_run_custom()
         documentation_clarity_run_custom(hyp_path)
 
+        
+
         print("-" * 60)
+
+        # =============================
+    # SIDE-BY-SIDE COMPARISON
+    # =============================
+    whisper_t = f"transcripts/whisper/convo{cid}.txt"
+    medasr_t = f"transcripts/medasr/convo{cid}.txt"
+
+    side_by_side_diff(ref_path, whisper_t, medasr_t)
+
+    
+
+    print("\nMEDASR – Clinical Risk")
+    clinical_risk_score(ref_path, medasr_t)
+
+    print("=" * 70)
+
 # ----- Latency (once) -----
 realtime_vs_batch()
 
