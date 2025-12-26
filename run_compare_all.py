@@ -1,11 +1,9 @@
 from pathlib import Path
-
 # -----------------------------
 # Transcription backends
 # -----------------------------
 from transcribe_whisper import transcribe as whisper_transcribe
 from transcribe_medasr import transcribe_medasr
-
 # -----------------------------
 # Core ASR metrics
 # -----------------------------
@@ -17,7 +15,6 @@ from metric.laterality_negation import (
     run_laterality_custom,
     run_negation_custom
 )
-
 # -----------------------------
 # Document structure
 # -----------------------------
@@ -25,7 +22,6 @@ from metric.document_structure import (
     section_heading_accuracy_run_custom,
     punctuation_accuracy_run_custom
 )
-
 # -----------------------------
 # Semantic & clinical
 # -----------------------------
@@ -43,7 +39,6 @@ from metric.system_metrics import (
     fp_fn_tradeoff_run_custom,
     realtime_vs_batch
 )
-
 # -----------------------------
 # Evaluation methodology
 # -----------------------------
@@ -54,7 +49,6 @@ from metric.evaluation_methodology import (
     statistical_significance_run_custom,
     drift_monitoring_score_run_custom
 )
-
 # -----------------------------
 # Tools & implementation
 # -----------------------------
@@ -82,7 +76,6 @@ from metric.regulatory_metrics import (
     transcription_standards_compliance_run_custom,
     documentation_clarity_run_custom
 )
-
 # -----------------------------
 # CONFIG
 # -----------------------------
@@ -92,7 +85,6 @@ FAST_MODE = True
 
 Path("transcripts/whisper").mkdir(parents=True, exist_ok=True)
 Path("transcripts/medasr").mkdir(parents=True, exist_ok=True)
-
 # -----------------------------
 # RUN COMPARISON
 # -----------------------------
@@ -162,7 +154,6 @@ for cid in CONVERSATIONS:
         documentation_clarity_run_custom(hyp_path)
 
         print("-" * 60)
-
 # ----- Latency (once) -----
 realtime_vs_batch()
 
